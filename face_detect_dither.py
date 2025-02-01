@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import torch
 from ultralytics import YOLO
+import time
 
 global_width = 320
 global_height = 240
@@ -54,6 +55,10 @@ def apply_bayer_dithering(image, threshold=128):
 
 def main():
     model = YOLO('models/yolov10n-face.pt')
+        # Configuration for detection frequency
+    DETECTION_INTERVAL = 0.5  # Perform detection every 0.5 seconds
+    last_detection_time = 0
+    last_boxes = []  # Store the last detected boxes
     
     cap = cv2.VideoCapture(gstreamer_pipeline(), cv2.CAP_GSTREAMER)
     if not cap.isOpened():
@@ -87,13 +92,13 @@ def main():
                 for box in boxes:
                     x1, y1, x2, y2 = map(int, box.xyxy[0])
                     conf = box.conf.item()
-                    cv2.rectangle(dithered_frame, (x1, y1), (x2, y2), (255, 0, 0), 2)
+                    cv2.rectangle(dithered_frame, (x1, y1), (x2, y2), (0, 0, 255), 2)
                     cv2.putText(dithered_frame, 
                         str(round(conf, 2)), 
                         (x1, y1 - 10), 
                         cv2.FONT_HERSHEY_SIMPLEX, 
                         0.5, 
-                        (0, 255, 0),
+                        (0, 0, 255),
                         2)
 
             cv2.imshow('Face Detection', dithered_frame)
