@@ -53,7 +53,7 @@ def apply_bayer_dithering(image, threshold=128):
     return dithered
 
 def main():
-    model = YOLO('yolov8n.pt')
+    model = YOLO('models/yolov10n-face.pt')
     
     cap = cv2.VideoCapture(gstreamer_pipeline(), cv2.CAP_GSTREAMER)
     if not cap.isOpened():
